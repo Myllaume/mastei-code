@@ -4,7 +4,7 @@
   "description": "Souligne des séquences de texte spécifiées dans un fichier YAML",
   "version": "0.1.0",
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.74.0"
   },
   "categories": [
     "Other"

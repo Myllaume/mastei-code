@@ -54,15 +54,22 @@ export function activate(context: vscode.ExtensionContext) {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (workspaceFolders) {
         const underlineJsonPath = path.join(workspaceFolders[0].uri.fsPath, 'underline.json');
-        const watcher = fs.watch(underlineJsonPath, (eventType) => {
-            if (eventType === 'change') {
-                loadUnderlineTexts();
-                if (vscode.window.activeTextEditor) {
-                    updateDecorations(vscode.window.activeTextEditor);
-                }
+        // Only create watcher if file exists
+        if (fs.existsSync(underlineJsonPath)) {
+            try {
+                const watcher = fs.watch(underlineJsonPath, (eventType) => {
+                    if (eventType === 'change') {
+                        loadUnderlineTexts();
+                        if (vscode.window.activeTextEditor) {
+                            updateDecorations(vscode.window.activeTextEditor);
+                        }
+                    }
+                });
+                context.subscriptions.push({ dispose: () => watcher.close() });
+            } catch (error) {
+                console.error('Error creating file watcher:', error);
             }
-        });
-        context.subscriptions.push({ dispose: () => watcher.close() });
+        }
     }
 }
 
@@ -133,33 +140,28 @@ function updateDecorations(editor: vscode.TextEditor) {
             continue;
         }
 
-        // Normalize text for searching (handle accents and special characters)
-        const searchTextNormalized = normalizeText(searchText);
-        const textNormalized = normalizeText(text);
-
-        let startIndex = 0;
-        let index = textNormalized.indexOf(searchTextNormalized, startIndex);
-        while (index !== -1) {
+        // Use case-insensitive search
+        const regex = new RegExp(escapeRegExp(searchText), 'gi');
+        let match;
+        
+        while ((match = regex.exec(text)) !== null) {
             // Get the actual position in the original text
-            const startPos = editor.document.positionAt(index);
-            const endPos = editor.document.positionAt(index + searchText.length);
+            const startPos = editor.document.positionAt(match.index);
+            const endPos = editor.document.positionAt(match.index + match[0].length);
 
             const decoration: vscode.DecorationOptions = {
                 range: new vscode.Range(startPos, endPos)
             };
             decorations.push(decoration);
-
-            startIndex = index + searchText.length;
-            index = textNormalized.indexOf(searchTextNormalized, startIndex);
         }
     }
 
     editor.setDecorations(decorationType, decorations);
 }
 
-function normalizeText(text: string): string {
-    // Normalize to NFD (decomposed form) to handle accents consistently
-    return text.normalize('NFD');
+function escapeRegExp(text: string): string {
+    // Escape special regex characters
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 export function deactivate() {
