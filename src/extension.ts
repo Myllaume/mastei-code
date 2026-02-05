@@ -138,12 +138,8 @@ function updateDecorations(editor: vscode.TextEditor) {
         const textNormalized = normalizeText(text);
 
         let startIndex = 0;
-        while (true) {
-            const index = textNormalized.indexOf(searchTextNormalized, startIndex);
-            if (index === -1) {
-                break;
-            }
-
+        let index = textNormalized.indexOf(searchTextNormalized, startIndex);
+        while (index !== -1) {
             // Get the actual position in the original text
             const startPos = editor.document.positionAt(index);
             const endPos = editor.document.positionAt(index + searchText.length);
@@ -154,6 +150,7 @@ function updateDecorations(editor: vscode.TextEditor) {
             decorations.push(decoration);
 
             startIndex = index + searchText.length;
+            index = textNormalized.indexOf(searchTextNormalized, startIndex);
         }
     }
 
