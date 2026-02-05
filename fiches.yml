@@ -1,0 +1,23 @@
+# Exemple de fichier YAML pour tester l'extension
+
+titre: "Relations internationales"
+description: |
+  Ce document parle de La France et l'Allemagne et de leurs relations.
+  Les français avec des caractères spéciaux sont bien pris en compte.
+
+sections:
+  - nom: "Histoire"
+    contenu: "La France et l'Allemagne ont une longue histoire commune."
+  
+  - nom: "Culture"
+    contenu: "Les français avec des caractères spéciaux aiment les accents: é, è, ê, à, ç."
+  
+  - nom: "Géographie"
+    villes:
+      - Paris
+      - Berlin
+      - Strasbourg
+    
+notes: |
+  N'oubliez pas que La France et l'Allemagne sont des partenaires importants.
+  Les français avec des caractères spéciaux utilisent: é, à, è, ù, â, ê, î, ô, û, ë, ï, ü, ÿ, ç.

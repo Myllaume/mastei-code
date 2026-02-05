@@ -1,0 +1,53 @@
+{
+  "name": "mastei-code",
+  "displayName": "Mastei Code - YAML Text Highlighter",
+  "description": "Souligne des séquences de texte spécifiées dans un fichier YAML",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:yaml"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Mastei Code",
+      "properties": {
+        "masteiCode.underlineColor": {
+          "type": "string",
+          "default": "#FF0000",
+          "description": "Couleur du soulignement"
+        },
+        "masteiCode.underlineStyle": {
+          "type": "string",
+          "default": "solid",
+          "enum": ["solid", "double", "dotted", "dashed", "wavy"],
+          "description": "Style du soulignement"
+        },
+        "masteiCode.backgroundColor": {
+          "type": "string",
+          "default": "",
+          "description": "Couleur de fond (optionnel)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^16.x",
+    "@types/vscode": "^1.60.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^4.5.0"
+  }
+}
